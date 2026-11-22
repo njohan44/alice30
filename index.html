@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musikquiz 1996 – Alice 30 år</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--pink:#ff3d9a;--purple:#6b2fd6;--teal:#14c4b4;--yellow:#ffd23f;--ink:#1d1033;--card:#fff;--muted:#6d6380;--ok:#1f9d55;--bad:#d64545}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Nunito,system-ui,sans-serif;color:var(--ink);min-height:100vh;
+    background:radial-gradient(circle at 15% 10%,#ffd6ec 0,transparent 40%),radial-gradient(circle at 90% 30%,#d9ccff 0,transparent 45%),radial-gradient(circle at 40% 100%,#c9f5ef 0,transparent 45%),#fff7fb}
+  .wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+  .logo{font-family:Bungee,sans-serif;font-size:clamp(34px,8vw,64px);line-height:1;text-align:center;margin:18px 0 4px;
+    background:linear-gradient(90deg,var(--pink),var(--purple),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{text-align:center;color:var(--purple);font-weight:700;margin-bottom:22px}
+  .card{background:var(--card);border-radius:18px;padding:20px;box-shadow:0 6px 24px rgba(80,30,120,.10);margin-bottom:16px}
+  h2{font-family:Bungee,sans-serif;font-weight:400;color:var(--pink);margin:0 0 10px;font-size:22px}
+  h2 small{font-family:Nunito;color:var(--purple);font-size:15px;font-weight:700;margin-left:6px}
+  button{font:inherit;font-weight:900;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:var(--purple);color:#fff}
+  button.pink{background:var(--pink)} button.ghost{background:#efe9fb;color:var(--purple)} button:disabled{opacity:.4;cursor:default}
+  .choices{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+  .choice{padding:22px;text-align:left;font-size:18px;border-radius:16px}
+  .choice span{display:block;font-size:13px;opacity:.85;font-weight:700}
+  @media(max-width:560px){.choices{grid-template-columns:1fr}}
+  .q{margin:14px 0 18px} .q p{margin:0 0 8px;font-weight:700}
+  .num{display:inline-block;background:var(--yellow);border-radius:8px;padding:1px 8px;margin-right:6px;font-weight:900}
+  .pen{color:var(--purple)}
+  .opts{display:flex;gap:8px;flex-wrap:wrap}
+  .opt{flex:1 1 150px;border:2px solid #e3dcf2;border-radius:12px;padding:10px 12px;cursor:pointer;background:#fff;display:flex;gap:8px;align-items:center}
+  .opt input{accent-color:var(--pink);width:18px;height:18px}
+  .opt.sel{border-color:var(--pink);background:#fff0f7}
+  input[type=text],input[type=number]{font:inherit;width:100%;padding:12px;border-radius:12px;border:2px solid #e3dcf2;background:#fff}
+  input:focus{outline:none;border-color:var(--purple)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .muted{color:var(--muted);font-size:14px}
+  .res{font-size:14px;margin-top:6px;font-weight:700} .res.ok{color:var(--ok)} .res.bad{color:var(--bad)}
+  .score{font-family:Bungee;font-size:56px;text-align:center;color:var(--pink);margin:6px 0}
+  /* Leader / big screen */
+  .stage{min-height:56vh;display:flex;flex-direction:column;justify-content:center}
+  .stage .song{font-family:Bungee;color:var(--pink);font-size:clamp(22px,4vw,34px)}
+  .stage .qtext{font-size:clamp(22px,4.2vw,40px);font-weight:900;margin:14px 0 22px;line-height:1.2}
+  .bigopts{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+  @media(max-width:640px){.bigopts{grid-template-columns:1fr}}
+  .bigopt{background:#fff;border-radius:16px;padding:18px;font-size:clamp(17px,2.6vw,24px);font-weight:700;border:3px solid #ece5f8;transition:.3s}
+  .bigopt b{color:var(--purple);margin-right:6px}
+  .bigopt.right{border-color:var(--ok);background:#e6f7ee} .bigopt.dim{opacity:.35}
+  .reveal{margin-top:18px;padding:16px;border-radius:14px;background:#e6f7ee;color:#11603a;font-size:clamp(17px,2.6vw,22px)}
+  .reveal .fact{display:block;color:#3c5d4a;font-size:.8em;margin-top:6px;font-weight:400}
+  .writebox{background:#fff;border:3px dashed #d8ccf2;border-radius:16px;padding:22px;font-size:20px;color:var(--muted);text-align:center}
+  .nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .progress{height:8px;border-radius:8px;background:#eee4f7;overflow:hidden;margin-bottom:14px}
+  .progress div{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple))}
+  table{width:100%;border-collapse:collapse} td{padding:8px 4px;border-bottom:1px solid #f0e9f7}
+  td.pts{font-family:Bungee;font-size:22px;color:var(--purple);text-align:center;width:60px}
+  .sm{padding:6px 12px;border-radius:9px}
+  .hidden{display:none!important}
+  .code{font-family:Bungee;font-size:42px;letter-spacing:4px;color:var(--purple);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Musikquiz 1996</div>
+  <div class="tag">🎂 Alice 30 år 🎶</div>
+  <div id="app"></div>
+</div>
+
+<script>
+const CODE = "ALICE30";
+const S = ["1","X","2"];
+// kind: mc | write | dance.  ok: list of accepted keywords for write questions (any match, after normalising)
+const SONGS = [
+ {song:"Spice Girls – Wannabe", qs:[
+  {n:"1.1",k:"mc",t:"Vilken grupp sjunger?",o:["Spice Girls","All Saints","Destiny's Child"],a:"1",f:"Wannabe var Spice Girls allra första singel."},
+  {n:"1.2",k:"write",t:"Hur många medlemmar hade gruppen?",a:"Fem",ok:["fem","5"],exact:true,f:"Scary, Sporty, Baby, Ginger och Posh."},
+  {n:"1.3",k:"mc",t:"Vilket av de här smeknamnen hade INGEN i gruppen?",o:["Ginger Spice","Posh Spice","Funky Spice"],a:"2",f:"Någon Funky Spice fanns inte."}]},
+ {song:"Los del Río – Macarena (Bayside Boys Mix)", qs:[
+  {n:"2.1",k:"write",t:"Vad heter låten?",a:"Macarena",ok:["macarena"],f:"Remixen låg etta i USA i 14 veckor."},
+  {n:"2.2",k:"mc",t:"Vilket land kommer duon Los del Río från?",o:["Mexiko","Italien","Spanien"],a:"2",f:"Spanien (Sevilla)."},
+  {n:"2.3",k:"dance",t:"Danstid! Ställ er upp och visa Macarena-dansen inför alla medan låten spelas – hela laget ska vara med!",a:"Visa dansen",f:"1 poäng för att dansa, 2 om alla rörelser sitter: armar fram, handflator upp, händer till axlarna, bakom huvudet, till höfterna, vicka – och hoppa ett kvarts varv!"}]},
+ {song:"Fugees – Killing Me Softly", qs:[
+  {n:"3.1",k:"write",t:"Vad heter låten?",a:"Killing Me Softly",ok:["killing me softly"],f:"Framförd av Fugees, från albumet The Score."},
+  {n:"3.2",k:"mc",t:"Låten är en cover. Vem gjorde originalet 1973?",o:["Whitney Houston","Roberta Flack","Aretha Franklin"],a:"X",f:"Roberta Flack."},
+  {n:"3.3",k:"mc",t:"Vad heter sångerskan?",o:["Lauryn Hill","Mariah Carey","Alicia Keys"],a:"1",f:"Lauryn Hill."}]},
+ {song:"The Cardigans – Lovefool", qs:[
+  {n:"4.1",k:"write",t:"Vilket svenskt band sjunger?",a:"The Cardigans",ok:["cardigans","cardigan"],f:"Nina Persson är sångerska."},
+  {n:"4.2",k:"mc",t:"Låten var med i en film från 1996 med Leonardo DiCaprio. Vilken?",o:["Titanic","Romeo + Juliet","Catch Me If You Can"],a:"X",f:"Romeo + Juliet (1996). Titanic kom året efter."},
+  {n:"4.3",k:"mc",t:"Från vilken stad kommer bandet?",o:["Malmö","Umeå","Jönköping"],a:"2",f:"Jönköping."}]},
+ {song:"Toni Braxton – Un-Break My Heart", qs:[
+  {n:"5.1",k:"mc",t:"Vem sjunger?",o:["Toni Braxton","Whitney Houston","Janet Jackson"],a:"1",f:"Toni Braxton."},
+  {n:"5.2",k:"write",t:"Vad heter låten?",a:"Un-Break My Heart",ok:["unbreak my heart","un break my heart"],f:"Skriven av Diane Warren."}]},
+ {song:"One More Time – Den vilda", qs:[
+  {n:"6.1",k:"write",t:"Den här låten vann Melodifestivalen 1996. Vad heter gruppen?",a:"One More Time",ok:["one more time"],f:"Peter Grönvall, Nanne Grönvall och Maria Rådsten."},
+  {n:"6.2",k:"mc",t:"Vilken placering fick Sverige i Eurovision Song Contest 1996?",o:["Första","Tredje","Tionde"],a:"X",f:"Tredje plats i Oslo. Irland vann."},
+  {n:"6.3",k:"write",t:"Gruppmedlemmen Peter Grönvall är son till en av killarna i ABBA. Vem?",a:"Benny Andersson",ok:["benny"],f:"Det räcker med ”Benny”."}]},
+ {song:"Kent – Kräm (så nära får ingen gå)", qs:[
+  {n:"7.1",k:"write",t:"Vilket svenskt band spelar?",a:"Kent",ok:["kent"],f:"Från albumet Verkligen (1996)."},
+  {n:"7.2",k:"mc",t:"Från vilken stad kommer bandet?",o:["Västerås","Örebro","Eskilstuna"],a:"2",f:"Eskilstuna."},
+  {n:"7.3",k:"write",t:"Vad heter bandets sångare?",a:"Joakim (Jocke) Berg",ok:["berg"],f:"Det räcker med ”Jocke Berg”."}]},
+ {song:"No Doubt – Don't Speak", qs:[
+  {n:"8.1",k:"write",t:"Vilket band spelar?",a:"No Doubt",ok:["no doubt","nodoubt"],f:"Bandet kommer från Kalifornien."},
+  {n:"8.2",k:"mc",t:"Vad heter bandets sångerska?",o:["Gwen Stefani","Shirley Manson","Avril Lavigne"],a:"1",f:"Gwen Stefani."},
+  {n:"8.3",k:"mc",t:"Låten handlar om ett uppbrott. Med vem?",o:["En känd skådespelare","En bandmedlem","Hennes manager"],a:"X",f:"Basisten Tony Kanal, som hon varit tillsammans med i flera år."}]},
+ {song:"Celine Dion – It's All Coming Back to Me Now", qs:[
+  {n:"9.1",k:"write",t:"Vem sjunger?",a:"Celine Dion",ok:["celine","dion"],f:"Från albumet Falling into You."},
+  {n:"9.2",k:"mc",t:"Vilket land kommer hon från?",o:["Kanada","Frankrike","Belgien"],a:"1",f:"Kanada. Hon växte upp med franska som modersmål."},
+  {n:"9.3",k:"mc",t:"Året därpå sjöng hon en enorm hit till en film. Vilken?",o:["Titanic","Armageddon","Bodyguard"],a:"1",f:"Titanic: My Heart Will Go On."}]},
+ {song:"Oasis – Don't Look Back in Anger", qs:[
+  {n:"10.1",k:"write",t:"Vilket band spelar?",a:"Oasis",ok:["oasis"],f:"Singeln släpptes i februari 1996."},
+  {n:"10.2",k:"mc",t:"Bandet leddes av två bröder. Vad heter de i efternamn?",o:["Gallagher","Davies","Jackson"],a:"1",f:"Liam och Noel Gallagher."},
+  {n:"10.3",k:"mc",t:"Vilken av bröderna sjunger på just den här låten?",o:["Liam","Noel","Båda turas om"],a:"X",f:"Noel, som annars mest spelade gitarr."}]},
+ {song:"Bonus: Mer om 1996", bonus:true, qs:[
+  {n:"B1",k:"write",t:"Vilket djur blev 1996 världens första klonade däggdjur?",a:"Fåret Dolly",ok:["dolly","far","faret"],f:"Född i Skottland i juli 1996."},
+  {n:"B2",k:"mc",t:"Var hölls sommar-OS 1996?",o:["Sydney","Atlanta","Barcelona"],a:"X",f:"Atlanta, USA."},
+  {n:"B3",k:"mc",t:"Vilken spelkonsol släpptes 1996?",o:["Nintendo 64","Playstation 2","Xbox"],a:"1",f:"Nintendo 64."}]}
+];
+const TIE = {t:"Utslagsfråga: Hur många veckor låg Macarena etta på amerikanska Billboard-listan 1996? Närmast vinner!", a:14};
+const ALLQ = SONGS.flatMap((s,si)=>s.qs.map(q=>({...q,song:s.song,si,bonus:!!s.bonus})));
+
+const store = {
+  get(k,d){try{const v=localStorage.getItem("mq96_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("mq96_"+k,JSON.stringify(v))}catch(e){}}
+};
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim();
+function isRight(q,v){
+  if(q.k==="mc") return v===q.a;
+  if(q.k==="write"){const n=norm(v); if(!n) return false;
+    return q.exact ? q.ok.includes(n) : q.ok.some(k=>(" "+n+" ").includes(" "+k+" ")||(k.includes(" ")&&n.replace(/ /g,"").includes(k.replace(/ /g,""))));}
+  return false;
+}
+
+/* ---------- Start ---------- */
+function start(){
+  location.hash="";
+  app.innerHTML = `
+  <div class="card"><h2>Välkommen!</h2>
+    <p>Alla låtar i kvällens quiz är hits från 1996 – året då Alice föddes. Välj hur du vill använda quizet:</p>
+    <div class="choices">
+      <button class="choice pink" onclick="teamStart()">📱 Jag är ett lag<span>Svara på frågorna i mobilen</span></button>
+      <button class="choice" onclick="leaderStart()">📺 Jag är quizledare<span>Visa frågorna på storskärm och håll koll på poängen</span></button>
+    </div></div>
+  <p class="muted" style="text-align:center">Tips: quizledaren kör på en TV eller dator, lagen svarar i varsin mobil.</p>`;
+}
+
+/* ---------- Team ---------- */
+let team;
+function teamStart(){
+  location.hash="lag";
+  team = store.get("team",{name:"",ans:{},dance:0,tie:"",done:false});
+  if(!team.name){
+    app.innerHTML = `<div class="card"><h2>Vad heter ert lag?</h2>
+      <form onsubmit="event.preventDefault();saveName()"><div class="row">
+      <input type="text" id="tn" placeholder="T.ex. Spice Girls 2.0" maxlength="40" style="flex:1">
+      <button class="pink">Starta</button></div></form>
+      <p class="muted" style="margin-top:12px"><button class="ghost sm" onclick="start()">← Tillbaka</button></p></div>`;
+    setTimeout(()=>document.getElementById("tn").focus(),50); return;
+  }
+  team.done ? teamResult() : teamForm();
+}
+function saveName(){const v=document.getElementById("tn").value.trim(); if(!v) return; team.name=v; store.set("team",team); teamForm();}
+function teamForm(){
+  let h = `<div class="card"><div class="row" style="justify-content:space-between"><div><b>Lag:</b> ${esc(team.name)}</div>
+    <button class="ghost sm" onclick="resetTeam()">Byt lag / börja om</button></div>
+    <p class="muted">Kryssa i rätt alternativ. Frågor med <span class="pen">✎</span> är skrivfrågor. Era svar sparas i mobilen medan ni spelar.</p></div>`;
+  SONGS.forEach((s,si)=>{
+    h += `<div class="card"><h2>${s.bonus?"Bonus":"Låt "+(si+1)}${s.bonus?" <small>Mer om 1996</small>":""}</h2>`;
+    s.qs.forEach(q=>{
+      const v = team.ans[q.n] ?? "";
+      h += `<div class="q"><p><span class="num">${q.n}</span>${q.k==="write"?'<span class="pen">✎</span> ':''}${q.k==="dance"?'🕺 ':''}${esc(q.t)}</p>`;
+      if(q.k==="mc"){
+        h += `<div class="opts">`+q.o.map((o,i)=>`<label class="opt ${v===S[i]?"sel":""}"><input type="radio" name="q${q.n}" value="${S[i]}" ${v===S[i]?"checked":""} onchange="setAns('${q.n}',this.value,this)"><b>${S[i]}</b> ${esc(o)}</label>`).join("")+`</div>`;
+      } else if(q.k==="write"){
+        h += `<input type="text" placeholder="Skriv ert svar" value="${esc(v)}" oninput="setAns('${q.n}',this.value)">`;
+      } else {
+        h += `<div class="row"><span class="muted">Poäng från quizledaren efter dansen:</span>
+          <div class="opts" style="flex:1">${[0,1,2].map(p=>`<label class="opt ${team.dance===p?"sel":""}"><input type="radio" name="dance" ${team.dance===p?"checked":""} onchange="team.dance=${p};store.set('team',team);markSel(this)"> ${p} p</label>`).join("")}</div></div>`;
+      }
+      h += `</div>`;
+    });
+    h += `</div>`;
+  });
+  h += `<div class="card"><h2>Utslagsfråga</h2><p><b>${esc(TIE.t.replace("Utslagsfråga: ",""))}</b></p>
+    <input type="number" min="0" max="52" placeholder="Antal veckor" value="${esc(team.tie)}" oninput="team.tie=this.value;store.set('team',team)"></div>
+    <div class="card"><h2>Klara?</h2><p>När quizledaren säger till: skriv in koden och se hur många poäng ni fick.</p>
+    <form onsubmit="event.preventDefault();grade()"><div class="row"><input type="text" id="code" placeholder="Rättningskod" style="flex:1;text-transform:uppercase"><button class="pink">Rätta</button></div></form>
+    <p id="codemsg" class="res bad"></p></div>`;
+  app.innerHTML = h;
+}
+function markSel(el){el.closest(".opts").querySelectorAll(".opt").forEach(x=>x.classList.remove("sel")); el.closest(".opt").classList.add("sel");}
+function setAns(n,v,el){team.ans[n]=v; store.set("team",team); if(el) markSel(el);}
+function grade(){
+  const c = document.getElementById("code").value.trim().toUpperCase();
+  if(c!==CODE){document.getElementById("codemsg").textContent="Fel kod – fråga quizledaren."; return;}
+  team.done=true; store.set("team",team); teamResult(); window.scrollTo(0,0);
+}
+function teamScore(t){
+  let main=0,bonus=0;
+  ALLQ.forEach(q=>{ if(q.k==="dance"){main+=t.dance||0;return;} if(isRight(q,t.ans[q.n])){q.bonus?bonus++:main++;} });
+  return {main,bonus};
+}
+function teamResult(){
+  const {main,bonus}=teamScore(team);
+  let h = `<div class="card" style="text-align:center"><h2>${esc(team.name)}</h2>
+    <div class="score">${main+bonus}</div><div><b>${main}</b> av 30 poäng + <b>${bonus}</b> av 3 bonuspoäng</div>
+    <p class="muted">Utslagsfråga: ni gissade <b>${esc(team.tie||"–")}</b> veckor (rätt svar: ${TIE.a})</p>
+    <p class="muted">Visa den här skärmen för quizledaren.</p></div><div class="card"><h2>Era svar</h2>`;
+  ALLQ.forEach(q=>{
+    const v=team.ans[q.n]; let ok, yours;
+    if(q.k==="dance"){ok=team.dance>0; yours=team.dance+" p";}
+    else {ok=isRight(q,v); yours = q.k==="mc" ? (v? v+": "+q.o[S.indexOf(v)] : "–") : (v||"–");}
+    const right = q.k==="mc" ? q.a+": "+q.o[S.indexOf(q.a)] : q.a;
+    h += `<div class="q" style="margin:10px 0"><p style="margin:0"><span class="num">${q.n}</span>${esc(q.t)}</p>
+      <div class="res ${ok?"ok":"bad"}">${ok?"✔":"✘"} Ert svar: ${esc(yours)}${ok?"":" · Rätt: "+esc(right)}</div></div>`;
+  });
+  h += `<p class="muted">Rättat för hand: skrivsvar rättas automatiskt men quizledaren har sista ordet!</p>
+    <button class="ghost" onclick="team.done=false;store.set('team',team);teamForm()">← Tillbaka till svaren</button></div>`;
+  app.innerHTML=h;
+}
+function resetTeam(){ if(!app.querySelector("#confirmReset")){
+    const d=document.createElement("div"); d.id="confirmReset"; d.className="card";
+    d.innerHTML=`<b>Radera alla svar och börja om?</b><div class="row" style="margin-top:10px"><button class="pink sm" onclick="store.set('team',null);teamStart()">Ja, börja om</button><button class="ghost sm" onclick="this.closest('.card').remove()">Avbryt</button></div>`;
+    app.prepend(d); window.scrollTo(0,0);} }
+
+/* ---------- Leader ---------- */
+let L;
+function leaderStart(){
+  location.hash="ledare";
+  L = store.get("leader",{i:-1,shown:false,teams:[]});
+  leaderRender();
+}
+function saveL(){store.set("leader",L)}
+function leaderRender(){
+  const total=ALLQ.length;
+  if(L.i<0){
+    app.innerHTML = `<div class="card"><h2>Quizledare</h2>
+      <p>Spela ca 30–60 sekunder av varje låt. Visa frågan på skärmen, låt lagen svara i mobilen, klicka sedan <b>Visa svar</b>.</p>
+      <p><b>Spellista:</b></p><ol>${SONGS.filter(s=>!s.bonus).map(s=>`<li>${esc(s.song)}</li>`).join("")}</ol>
+      <div class="row"><button class="pink" onclick="L.i=0;L.shown=false;saveL();leaderRender()">Starta quizet ▶</button>
+      <button class="ghost" onclick="L.i=total;saveL();leaderRender()">Poängtavla</button>
+      <button class="ghost" onclick="start()">← Tillbaka</button></div></div>`;
+    return;
+  }
+  if(L.i>=total){ leaderEnd(); return; }
+  const q=ALLQ[L.i];
+  const head = q.bonus ? "Bonus" : "Låt "+(q.si+1);
+  let body="";
+  if(q.k==="mc"){
+    body = `<div class="bigopts">`+q.o.map((o,i)=>`<div class="bigopt ${L.shown?(S[i]===q.a?"right":"dim"):""}"><b>${S[i]}</b>${esc(o)}</div>`).join("")+`</div>`;
+  } else if(q.k==="write"){
+    body = `<div class="writebox">✎ Skrivfråga – skriv svaret i mobilen</div>`;
+  } else {
+    body = `<div class="writebox" style="font-size:28px">🕺💃 Alla lag upp och dansa! 💃🕺</div>`;
+  }
+  const right = q.k==="mc" ? q.a+": "+q.o[S.indexOf(q.a)] : q.a;
+  app.innerHTML = `<div class="progress"><div style="width:${(L.i/total*100).toFixed(1)}%"></div></div>
+   <div class="card stage">
+     <div class="song">${head}${L.shown&&!q.bonus?` <span style="font-family:Nunito;font-size:.6em;color:var(--purple)">– ${esc(q.song)}</span>`:""}</div>
+     <div class="qtext"><span class="num">${q.n}</span> ${esc(q.t)}</div>
+     ${body}
+     ${L.shown?`<div class="reveal"><b>Rätt svar: ${esc(right)}</b><span class="fact">${esc(q.f||"")}</span></div>`:""}
+     <div class="nav">
+       <button class="ghost" onclick="L.i--;L.shown=true;saveL();leaderRender()">◀ Föregående</button>
+       ${L.shown?`<button class="pink" onclick="L.i++;L.shown=false;saveL();leaderRender()">Nästa ▶</button>`
+               :`<button class="pink" onclick="L.shown=true;saveL();leaderRender()">Visa svar 👀</button>`}
+     </div>
+   </div>
+   <p class="muted" style="text-align:center">Fråga ${L.i+1} av ${total} · <a href="#ledare" onclick="L.i=total;saveL();leaderRender();return false">Hoppa till slutet</a></p>`;
+}
+function leaderEnd(){
+  let rows = L.teams.map((t,i)=>`<tr><td>${esc(t.name)}</td>
+      <td style="width:120px"><button class="ghost sm" onclick="L.teams[${i}].p--;saveL();leaderEnd()">−</button>
+      <button class="ghost sm" onclick="L.teams[${i}].p++;saveL();leaderEnd()">+</button></td>
+      <td class="pts">${t.p}</td><td style="width:40px"><button class="ghost sm" onclick="L.teams.splice(${i},1);saveL();leaderEnd()">✕</button></td></tr>`).join("");
+  const sorted=[...L.teams].sort((a,b)=>b.p-a.p);
+  app.innerHTML = `<div class="card" style="text-align:center"><h2>Dags att rätta!</h2>
+      <p>Be lagen skriva in rättningskoden i mobilen:</p><div class="code">${CODE}</div>
+      <p class="muted">${esc(TIE.t)} <b>Svar: ${TIE.a} veckor.</b></p></div>
+    <div class="card"><h2>Poängtavla</h2>
+      <form onsubmit="event.preventDefault();addTeam()"><div class="row" style="margin-bottom:10px">
+        <input type="text" id="nt" placeholder="Lagnamn" style="flex:2"><input type="number" id="np" placeholder="Poäng" style="flex:1">
+        <button>Lägg till</button></div></form>
+      <table>${rows||'<tr><td class="muted">Lägg till lagen och deras poäng här.</td></tr>'}</table>
+      ${sorted.length?`<p style="font-size:22px;text-align:center;margin-top:16px">🏆 Ledare: <b>${esc(sorted[0].name)}</b> med ${sorted[0].p} poäng</p>`:""}
+    </div>
+    <div class="row"><button class="ghost" onclick="L.i=ALLQ.length-1;L.shown=true;saveL();leaderRender()">◀ Tillbaka till frågorna</button>
+    <button class="ghost" onclick="L.i=-1;saveL();leaderRender()">Till start</button></div>`;
+}
+function addTeam(){const n=document.getElementById("nt").value.trim(); if(!n) return; L.teams.push({name:n,p:parseInt(document.getElementById("np").value)||0}); saveL(); leaderEnd();}
+
+/* ---------- Routing ---------- */
+function route(){ const h=location.hash.slice(1); if(h==="lag") teamStart(); else if(h==="ledare") leaderStart(); else start(); }
+route();
+</script>
+</body>
+</html>
