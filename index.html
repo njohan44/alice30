@@ -226,10 +226,29 @@ function resetTeam(){ if(!app.querySelector("#confirmReset")){
 
 /* ---------- Leader ---------- */
 let L;
+const LEADER_PW = "ALICE30";
+function leaderUnlocked(){try{return sessionStorage.getItem("mq96_leader_ok")==="1"}catch(e){return window._leaderOk===true}}
 function leaderStart(){
   location.hash="ledare";
+  if(!leaderUnlocked()){
+    app.innerHTML = `<div class="card"><h2>Quizledare</h2>
+      <p>Ange lösenordet för att öppna quizledarläget.</p>
+      <form onsubmit="event.preventDefault();checkLeaderPw()"><div class="row">
+      <input type="password" id="lpw" placeholder="Lösenord" style="flex:1;font:inherit;padding:12px;border-radius:12px;border:2px solid #e3dcf2">
+      <button class="pink">Öppna</button></div></form>
+      <p id="lpwmsg" class="res bad"></p>
+      <p><button class="ghost sm" onclick="start()">← Tillbaka</button></p></div>`;
+    setTimeout(()=>{const e=document.getElementById("lpw"); if(e) e.focus();},50);
+    return;
+  }
   L = store.get("leader",{i:-1,shown:false,teams:[]});
   leaderRender();
+}
+function checkLeaderPw(){
+  const v=document.getElementById("lpw").value.trim().toUpperCase();
+  if(v!==LEADER_PW){document.getElementById("lpwmsg").textContent="Fel lösenord."; return;}
+  try{sessionStorage.setItem("mq96_leader_ok","1")}catch(e){window._leaderOk=true}
+  leaderStart();
 }
 function saveL(){store.set("leader",L)}
 function leaderRender(){
